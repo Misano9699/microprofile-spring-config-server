@@ -1,0 +1,2 @@
+GET localhost:8888/microprofile-config/local
+Content-Type: application/json
