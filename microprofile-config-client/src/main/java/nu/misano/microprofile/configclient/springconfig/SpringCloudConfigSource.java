@@ -40,7 +40,7 @@ public class SpringCloudConfigSource implements ConfigSource {
 
     @Override
     public Map<String, String> getProperties() {
-        if (configProperties == null) {
+        if (configProperties == null || !isLoading) {
             configProperties = loadProperties();
         }
         return configProperties;
@@ -63,8 +63,8 @@ public class SpringCloudConfigSource implements ConfigSource {
 
     @Override
     public String getValue(String key) {
-        if (isLoading || key.startsWith(CONFIG_PREFIX)) {
-            // either we are already loading or the key is one of the properties we need for configuring our rest client
+        if (key.startsWith(CONFIG_PREFIX)) {
+            // we are not interested in the properties needed fot the REST Client to call the Spring Cloud Config Server
             return null;
         }
         return getProperties() != null ? getProperties().get(key) : null;
