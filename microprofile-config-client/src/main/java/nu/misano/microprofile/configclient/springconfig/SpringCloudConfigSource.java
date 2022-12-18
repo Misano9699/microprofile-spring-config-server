@@ -24,13 +24,10 @@ public class SpringCloudConfigSource implements ConfigSource {
     /* ordinal value (priority) of this ConfigSource */
     private static final int ORDINAL_VALUE = 500;
 
-    /* prefix of the keys we need to load the config properties */
-    private static final String CONFIG_PREFIX = "spring.config.";
-
     /* properties for loading the properties from the Spring Cloud Config Server */
-    private static final String URL = "url";
-    private static final String APPLICATION_NAME = "application";
-    private static final String PROFILE_NAME = "profile";
+    private static final String URL = "spring.config.url";
+    private static final String APPLICATION_NAME = "spring.config.application";
+    private static final String PROFILE_NAME = "spring.config.profile";
 
     /* map with Spring Cloud Config properties */
     private Map<String, String> configProperties = null;
@@ -63,10 +60,6 @@ public class SpringCloudConfigSource implements ConfigSource {
 
     @Override
     public String getValue(String key) {
-        if (key.startsWith(CONFIG_PREFIX)) {
-            // we are not interested in the properties needed fot the REST Client to call the Spring Cloud Config Server
-            return null;
-        }
         return getProperties() != null ? getProperties().get(key) : null;
     }
 
@@ -76,9 +69,9 @@ public class SpringCloudConfigSource implements ConfigSource {
     private Map<String, String> loadProperties() {
         // read the properties needed from the default Config Sources
         Config config = getConfig();
-        String url = config.getValue(CONFIG_PREFIX + URL, String.class);
-        String application = config.getValue(CONFIG_PREFIX + APPLICATION_NAME, String.class);
-        String profile = config.getValue(CONFIG_PREFIX + PROFILE_NAME, String.class);
+        String url = config.getValue(URL, String.class);
+        String application = config.getValue(APPLICATION_NAME, String.class);
+        String profile = config.getValue(PROFILE_NAME, String.class);
 
         if (url != null && application != null && profile != null) {
             try {
